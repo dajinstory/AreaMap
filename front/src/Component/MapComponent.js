@@ -2,10 +2,10 @@
 import React, { useEffect } from "react";
 import { Polyline, withLeaflet } from "react-leaflet";
 
-function MapComponent() {
+function MapComponent({searchValue}) {
   useEffect(() => {
     mapscript();
-  }, []);
+  }, [searchValue]);
 
   const mapscript = () => {
     let container = document.getElementById("map");
@@ -21,13 +21,14 @@ function MapComponent() {
     var mapCenter = map.getCenter();
     // 장소 검색 객체를 생성합니다
     const ps = new kakao.maps.services.Places(map); 
+    //편의점 찾는 반경
+    var radius = 10000000;
+    //편의점 찾는 함수
+    ps.categorySearch('CS2', placesSearchWithCategory, {useMapBounds:true}); 
 
-    var radius = 1000;
+    ps.keywordSearch(searchValue, placesSearchWithKeyword); 
 
-    ps.categorySearch('CS2', placesSearchCB, {useMapBounds:true}); 
-
-    // 키워드 검색 완료 시 호출되는 콜백함수 입니다
-    function placesSearchCB (data, status, pagination) {
+    function placesSearchWithCategory (data, status, pagination) {
         if (status === kakao.maps.services.Status.OK) {
             for (var i=0; i<data.length; i++) {
               displayMarker(data[i]);    
@@ -35,6 +36,22 @@ function MapComponent() {
         }
     }
 
+    function placesSearchWithKeyword (data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+    
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+            // LatLngBounds 객체에 좌표를 추가합니다
+            //var bounds = new kakao.maps.LatLngBounds();
+    
+            for (var i=0; i<data.length; i++) {
+                displayMarker(data[i]);    
+                //bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+            }       
+    
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+            //map.setBounds(bounds);
+        } 
+    }
     // 지도에 마커를 표시하는 함수입니다
     function displayMarker(place) {
         // 마커를 생성하고 지도에 표시합니다
@@ -62,12 +79,10 @@ function MapComponent() {
     }
     kakao.maps.event.addListener(map, 'center_changed', function() {
       mapCenter = map.getCenter();
-      ps.categorySearch('CS2', placesSearchCB, {useMapBounds:true}); 
-
+      ps.categorySearch('CS2', placesSearchWithCategory, {useMapBounds:true}); 
+      ps.keywordSearch(searchValue, placesSearchWithKeyword); 
     });
-
     kakao.maps.event.addListener(map, 'zoom_changed', function() {        
-      
     });
     // //마커가 표시 될 위치
     // let markerPosition = new kakao.maps.LatLng(
