@@ -1,14 +1,16 @@
-import {useState} from 'react'
-import {options} from './Data/Data'
+import {useState,useEffect} from 'react'
+import {options,geolocationOptions} from './Data/Data'
 import Navigation from './Component/Navigation';
 import SearchBar from './Component/SearchBar'
 import Content from './Component/Content'
+import {usePosition} from './Component/Position'
 
 function App() {
 
   const [searchValue,setSearchValue] = useState('한양대학교')
   const [searchMapValue,setSearchMapValue] = useState('한양대학교')
   const [selectedOption,setSelectedOption] = useState(options[1])
+  const {latitude, longitude, error} = usePosition();
 
    // 검색창 값 변화
    const searchValueOnChangeHandler = (e)=>{
@@ -45,6 +47,7 @@ function App() {
 
   // 리셋 버튼 클릭
   const resetOption = () =>{
+    console.log(latitude,longitude,error)
     setSearchValue('한양대학교')
     setSelectedOption(options[1])
   }
