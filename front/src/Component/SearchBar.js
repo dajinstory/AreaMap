@@ -1,53 +1,33 @@
-import react,{useState} from 'react'
+import {useState} from 'react'
 import Select from 'react-select';
-
-const options = [
-  { value: '200', label: '200M' },
-  { value: '500', label: '500M' },
-  { value: '1KM', label: '1KM' },
-  { value: '2KM', label: '2KM' },
-];
+import {selcetStyle,options} from '../Data/Data'
 
 
-function SearchBar(){
-  
-  const [selectedOption,SetSelectedOption] = useState(options[1])
-  
-  const handleChange= (e) => {
-    console.log(selectedOption)
-    console.log(e);
-    SetSelectedOption(e)
-  };
 
-  const style = {
-    option:(provided, state)=>({
-      ...provided,
-      width:"200px",
-    }),
-    container:(provided, state)=>({
-      ...provided,
-      width:"200px",
-    }),
-  }
+function SearchBar({searchValue,selectedOption,searchValueOnChangeHandler,searchValueFocusHandler,searchValueEnterHandler,searchHandler,handleChange,resetOption}){
 
-  const resetOption = () =>{
-    SetSelectedOption(options[1])
-  }
+ 
 
   return(
     <div style={{"boxSizing":"border-box","margin":"0px","padding":"0px","border":"0px","font":"inherit","verticalAlign":"baseline","flex":"0 0 auto","display":"flex","width":"100%","minWidth":"1280px","height":"64px","borderBottom":"1px solid rgb(205, 205, 205)","backgroundColor":"rgb(255, 255, 255)","boxShadow":"rgba(0, 0, 0, 0.07) 0px 1px 3px 0px","zIndex":"900"}}>
       {/* 검색바 */}
       <div style={{"boxSizing":"border-box","margin":"0px","padding":"0px","border":"0px","font":"inherit","verticalAlign":"baseline","flex":"0 0 auto","width":"240px","height":"100%","borderRight":"1px solid rgb(235, 235, 235)","position":"relative"}}>
         <input 
+        onChange={searchValueOnChangeHandler}
+        onFocus={searchValueFocusHandler}
+        onKeyPress={searchValueEnterHandler}
+        value={searchValue}
         style={{"fontFamily":"\"Spoqa Han Sans\", Sans-serif","boxSizing":"border-box","margin":"0px","appearance":"none","userSelect":"text","outline":"none","width":"100%","height":"100%","padding":"0px 50px 0px 30px","color":"rgb(34, 34, 34)","fontSize":"16px","border":"none","backgroundColor":"transparent"}}
-        placeholder="신림동 원룸"
+        placeholder="검색어 입력"
         type="text"
         autoComplete="off"
         >
         </input>
+        <div onClick={searchHandler}>
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" style={{"font":"inherit","width":"18","height":"18","fontFamily":"\"Spoqa Han Sans\", Sans-serif","boxSizing":"border-box","margin":"0px","padding":"0px","position":"absolute","top":"50%","right":"20px","transform":"translateY(-50%)"}}>
           <path id="Icon_awesome-search" data-name="Icon awesome-search" d="M17.755,15.562l-3.505-3.5a.843.843,0,0,0-.6-.246h-.573a7.31,7.31,0,1,0-1.266,1.266v.573a.843.843,0,0,0,.246.6l3.505,3.5a.84.84,0,0,0,1.192,0l.995-.995a.848.848,0,0,0,0-1.2ZM7.313,11.811a4.5,4.5,0,1,1,4.5-4.5A4.5,4.5,0,0,1,7.313,11.811Z"/>
         </svg>
+        </div>
       </div>
       {/* 필터 */}
       <div style={{"boxSizing":"border-box","margin":"0px","border":"0px","font":"inherit","verticalAlign":"baseline","WebkitBoxFlex":"1","flexGrow":"1","display":"flex","WebkitBoxAlign":"center","alignItems":"center","width":"0px","height":"100%","padding":"0px 12px"}}>
@@ -55,7 +35,7 @@ function SearchBar(){
         value={selectedOption}
         onChange={handleChange}
         options={options}
-        styles={style}
+        styles={selcetStyle}
       ></Select>
       </div>
 

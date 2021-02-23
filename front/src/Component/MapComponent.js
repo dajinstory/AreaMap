@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { Polyline, withLeaflet } from "react-leaflet";
 
-function MapComponent() {
+function MapComponent({searchMapValue,selectedOption}) {
   useEffect(() => {
     mapscript();
   }, []);
