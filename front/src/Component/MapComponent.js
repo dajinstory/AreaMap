@@ -7,6 +7,8 @@ function MapComponent({searchValue}) {
     mapscript();
   }, [searchValue]);
 
+
+
   const mapscript = () => {
     let container = document.getElementById("map");
     let options = {
@@ -22,7 +24,7 @@ function MapComponent({searchValue}) {
     // 장소 검색 객체를 생성합니다
     const ps = new kakao.maps.services.Places(map); 
     //편의점 찾는 반경
-    var radius = 10000000;
+    var radius = 0;
     //편의점 찾는 함수
     ps.categorySearch('CS2', placesSearchWithCategory, {useMapBounds:true}); 
 
@@ -63,7 +65,7 @@ function MapComponent({searchValue}) {
         });
         var dist = poly.getLength();
 
-        if(dist<radius){
+        if(dist<radius && radius != 0){
             var marker = new kakao.maps.Marker({
               map: map,
               position: markerPosition
