@@ -1,6 +1,6 @@
 import MapComponent from './MapComponent';
 
-function Content(){
+function Content({searchMapValue,selectedOption}){
 
 
   return (
@@ -11,7 +11,10 @@ function Content(){
 
       {/* 카카오맵 - 세진 여기 div에서 작업해면 돼*/}
       <div style={{"boxSizing":"border-box","margin":"0px","padding":"0px","border":"0px","font":"inherit","verticalAlign":"baseline","WebkitBoxFlex":"1","flexGrow":"1","height":"100%","position":"relative","zIndex":"10"}}> </div>
-        <MapComponent></MapComponent>
+        <MapComponent
+        searchMapValue={searchMapValue}
+        selectedOption={selectedOption}
+        ></MapComponent>
     </div>
   )
 }
