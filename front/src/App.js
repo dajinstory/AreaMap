@@ -35,7 +35,6 @@ function App() {
 
   // 실제 검색
   const search = (text) =>{
-    console.log("!!!");
     setSearchMapValue(text)
   }
 
