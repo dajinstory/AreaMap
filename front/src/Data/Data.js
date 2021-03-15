@@ -1,9 +1,9 @@
 // react-select 목록
 export const options = [
-  { value: 200, label: '200M' },
-  { value: 500, label: '500M' },
-  { value: 1000, label: '1KM' },
-  { value: 2000, label: '2KM' },
+  { value: '200', label: '200M' },
+  { value: '500', label: '500M' },
+  { value: '1KM', label: '1KM' },
+  { value: '2KM', label: '2KM' },
 ];
 
 // react-select css 설정
