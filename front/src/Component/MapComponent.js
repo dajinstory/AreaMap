@@ -10,7 +10,10 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
   useEffect(() => {
     mapscript();
   }, [searchMapValue, selectedOption]);
-
+  const mapData = [{ name: "현대 고등학교 건너편", lat: "127.066933", lng: "37.623417", address: "서울특별시 강남구 압구정로 134", dist : "200"},
+                   { name: "논현역 7번 출구", lat: "127.021477", lng: "37.511517", address: "서울특별시 강남구 학동로 지하 102", dist : "200"},
+                   { name: "신영 로열플레이스 앞", lat: "127.035835", lng: "37.512527", address: "서울특별시 강남구 언주로 626", dist : "200"},
+                   { name: "MCM본사 직영점 앞", lat: "127.0345508", lng: "37.520641", address: "서울특별시 강남구 언주로 734", dist : "200"}]
   var centerX = 37.624915253753194;
   var centerY = 127.15122688059974;
   var radius = selectedOption.value;
@@ -18,7 +21,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
   var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable: true});
   var ps;
   var searchCSList;
-  
+
   //map객체 생성
   const mapmake = () => {
     console.log("mapmake");
@@ -51,7 +54,10 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
       mapCenter = mapi.getCenter();
       //해당 좌표를 중심으로 편의점 찾기
       ps.categorySearch('CS2', placesSearchWithCategory, {useMapBounds:true, location: coords,radius: radius}); 
-      await displayMarker(searchedCenter);
+      
+      
+      displayMarker(searchedCenter);
+      makeCircle(coords.Ma, coords.La);
     }
   }
 
@@ -63,6 +69,8 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
         }
     }
   }
+
+
 
   // 지도에 마커를 표시하는 함수입니다
   function displayMarker(place) {
@@ -87,6 +95,22 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
         });
       }
   }
+
+
+  function makeCircle(x, y) {
+    var circle = new kakao.maps.Circle({
+      center: new kakao.maps.LatLng(x, y),
+      radius: radius,
+      strokeWeight: 5, // 선의 두께입니다 
+      strokeColor: '#75B8FA', // 선의 색깔입니다
+      strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+      strokeStyle: 'dashed', // 선의 스타일 입니다
+      fillColor: '#CFE7FF', // 채우기 색깔입니다
+      fillOpacity: 0.7  // 채우기 불투명도 입니다
+    });
+    circle.setMap(mapi);
+  }
+
   return <div id="map" style={{ width: "100vw", height: "100vh" }}></div>;
 }
 
