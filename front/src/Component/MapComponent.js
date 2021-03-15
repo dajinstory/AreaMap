@@ -84,7 +84,7 @@ function MapComponent({searchMapValue,selectedOption}) {
     // marker.setMap(map);
   };
 
-  return <div id="map" style={{ width: "100vw", height: "100vh" }}></div>;
+  return <div id="map" style={{ width: "100vw", height: "87vh" }}></div>;
 }
 
 export default MapComponent;
