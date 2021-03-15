@@ -3,6 +3,7 @@ import {options,geolocationOptions} from './Data/Data'
 import Navigation from './Component/Navigation';
 import SearchBar from './Component/SearchBar'
 import Content from './Component/Content'
+import Footer from './Component/Footer';
 import {usePosition} from './Component/Position'
 
 function App() {
@@ -55,23 +56,24 @@ function App() {
   return (
     <>
     <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'></link>
-    <div style={{font:"Spoqa Han Sans, Sans-serif"}}>
-      <Navigation></Navigation>
-      <SearchBar
-      searchValue={searchValue}
-      selectedOption={selectedOption}
-      searchValueOnChangeHandler={searchValueOnChangeHandler}
-      searchValueFocusHandler={searchValueFocusHandler}
-      searchValueEnterHandler={searchValueEnterHandler}
-      searchHandler={searchHandler}
-      handleChange={handleChange}
-      resetOption={resetOption}
-      ></SearchBar>
-      <Content
-      searchMapValue={searchMapValue}
-      selectedOption={selectedOption}
-      ></Content>
-    </div>
+      <div style={{font:"Spoqa Han Sans, Sans-serif"}}>
+        <Navigation></Navigation>
+        <SearchBar
+        searchValue={searchValue}
+        selectedOption={selectedOption}
+        searchValueOnChangeHandler={searchValueOnChangeHandler}
+        searchValueFocusHandler={searchValueFocusHandler}
+        searchValueEnterHandler={searchValueEnterHandler}
+        searchHandler={searchHandler}
+        handleChange={handleChange}
+        resetOption={resetOption}
+        ></SearchBar>
+        <Content
+        searchMapValue={searchMapValue}
+        selectedOption={selectedOption}
+        ></Content>
+        <Footer></Footer>
+      </div>
     </>
   );
 }
