@@ -149,7 +149,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng,setList}) {
   
   function postPlace(x, y){
     const posting = {x: x, y: y, radius: radius};
-    axios.post('url',{
+    axios.post('http://localhost:8080/',{
       x: x,
       y: y,
       radius : radius
