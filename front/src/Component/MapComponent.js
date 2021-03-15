@@ -4,16 +4,18 @@ import { Polyline, withLeaflet } from "react-leaflet";
 
 function MapComponent({searchMapValue,selectedOption, lat, lng}) {
   const [mapi,setMapi] = useState(0);
+  const [markerArr, setmakerArr] =useState([]);
   useEffect(() => {
       setMapi(mapmake());
   }, []);
   useEffect(() => {
     mapscript();
   }, [searchMapValue, selectedOption]);
-  const mapData = [{ name: "현대 고등학교 건너편", lat: "127.066933", lng: "37.623417", address: "서울특별시 강남구 압구정로 134", dist : "200"},
-                   { name: "논현역 7번 출구", lat: "127.021477", lng: "37.511517", address: "서울특별시 강남구 학동로 지하 102", dist : "200"},
-                   { name: "신영 로열플레이스 앞", lat: "127.035835", lng: "37.512527", address: "서울특별시 강남구 언주로 626", dist : "200"},
-                   { name: "MCM본사 직영점 앞", lat: "127.0345508", lng: "37.520641", address: "서울특별시 강남구 언주로 734", dist : "200"}]
+  const mapData = [{ place_name: "현대 고등학교 건너편", x: "127.066933", y: "37.623417", address: "서울특별시 강남구 압구정로 134", dist : "200"},
+                   { place_name: "논현역 7번 출구", x: "127.021477", y: "37.511517", address: "서울특별시 강남구 학동로 지하 102", dist : "200"},
+                   { place_name: "신영 로열플레이스 앞", x: "127.035835", y: "37.512527", address: "서울특별시 강남구 언주로 626", dist : "200"},
+                   { place_name: "MCM본사 직영점 앞", x: "127.0345508", y: "37.520641", address: "서울특별시 강남구 언주로 734", dist : "200"}]
+  var returnData;  
   var centerX = 37.624915253753194;
   var centerY = 127.15122688059974;
   var radius = selectedOption.value;
@@ -41,10 +43,11 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
     ps = new kakao.maps.services.Places(mapi);
      //주소를 입력했을 때 마커를 생성하고 해당 좌표로 이동
     var geocoder = new kakao.maps.services.Geocoder();
-    await geocoder.addressSearch(searchMapValue, searchingCS);
+    await geocoder.addressSearch(searchMapValue, searchingHome);
+    
   };
 
-  async function searchingCS(result, status){
+  async function searchingHome(result, status){
     if (status === kakao.maps.services.Status.OK){
       var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
       var searchedCenter = {x: coords.La, y: coords.Ma, place_name : '우리집'};
@@ -53,9 +56,8 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
       mapi.setCenter(coords);
       mapCenter = mapi.getCenter();
       //해당 좌표를 중심으로 편의점 찾기
-      ps.categorySearch('CS2', placesSearchWithCategory, {useMapBounds:true, location: coords,radius: radius}); 
-      
-      
+      //ps.categorySearch('CS2', placesSearchWithCategory, {useMapBounds:true, location: coords,radius: radius}); 
+      await placeSearchForBike(mapData);
       displayMarker(searchedCenter);
       makeCircle(coords.Ma, coords.La);
     }
@@ -70,6 +72,11 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
     }
   }
 
+  async function placeSearchForBike (data){
+    for(var i=0; i<data.length; i++){
+      displayMarker(data[i]);
+    }
+  }
 
 
   // 지도에 마커를 표시하는 함수입니다
@@ -78,6 +85,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
       var poly = new kakao.maps.Polyline({
         path : [mapCenter, markerPosition]
       });
+      const tmpMarkerArr = [];
       var dist = poly.getLength();
       console.log(place);
       console.log(dist);
@@ -93,6 +101,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng}) {
             console.log(place.place_name);
             infowindow.open(mapi, marker);
         });
+        tmpMarkerArr.push(marker);
       }
   }
 
