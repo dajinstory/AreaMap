@@ -7,7 +7,7 @@ import Footer from './Component/Footer';
 import ModalWindow from './Component/ModalWindow'
 // import {usePosition} from './Component/Position'
 
-function App() {
+function Bike() {
 
   const [searchValue,setSearchValue] = useState('한양대학교')
   const [searchMapValue,setSearchMapValue] = useState('한양대학교')
@@ -66,7 +66,7 @@ function App() {
     <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'></link>
       <div style={{font:"Spoqa Han Sans, Sans-serif"}}>
         <div style={{width:"100vw",height:"100vh",minWidth:"1300px",overflow:"auto"}}>
-          <Navigation></Navigation>
+          <Navigation type={"bike"}></Navigation>
           <SearchBar
           searchValue={searchValue}
           selectedOption={selectedOption}
@@ -80,6 +80,7 @@ function App() {
           <Content
           searchMapValue={searchMapValue}
           selectedOption={selectedOption}
+          type={"store"}
           ></Content>
         </div>
         <Footer></Footer>
@@ -89,4 +90,4 @@ function App() {
   );
 }
 
-export default App;
+export default Bike;

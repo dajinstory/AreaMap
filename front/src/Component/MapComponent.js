@@ -4,7 +4,7 @@ import React, {useState, useEffect } from "react";
 import { Polyline, withLeaflet } from "react-leaflet";
 import axios from 'axios';
 
-function MapComponent({searchMapValue,selectedOption, lat, lng, setList}) {
+function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type}) {
   const [mapi,setMapi] = useState(0);
   const [markerArr, setmarkerArr] = useState([]);
   const [circleArr, setcircleArr] = useState([]);
