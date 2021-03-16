@@ -1,4 +1,15 @@
-function Navigation(){
+
+import { useHistory } from 'react-router-dom';
+function Navigation({type}){
+
+  const history = useHistory();
+
+  const goBike = () => {
+    history.push("/bike");
+  }
+  const goStore = () => {
+    history.push("/store");
+  }
 
   return(
     <nav style={{
@@ -50,7 +61,7 @@ function Navigation(){
             <path id="패스_5" data-name="패스 5" d="M24,9V33" fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3"/>
           </g>
         </svg>
-        <div style={{
+        {/* <div style={{
           "boxSizing": "border-box",
           "margin": "0px",
           "padding": "0px",
@@ -109,7 +120,7 @@ function Navigation(){
             "letterSpacing": "-0.5px"
         }}>링크2</a>
 
-        </div>
+        </div> */}
 
 
         </nav>
@@ -124,7 +135,24 @@ function Navigation(){
           "WebkitBoxAlign": "center",
           "alignItems": "center"
         }}>
-          <a href="https://portal.hanyang.ac.kr/sso/lgin.do" style={{
+            { 
+            type==="bike"? <div onClick={goBike} style={{
+              "boxSizing": "border-box",
+              "margin": "0px",
+              "border": "0px",
+              "font": "inherit",
+              "verticalAlign": "baseline",
+              "textDecoration": "none",
+              "outline": "none",
+              "fontFamily": "\"Spoqa Han Sans\", \"Nanum Gothic\", -apple-system, sans-serif",
+              "display": "inline-block",
+              "padding": "5px 0px",
+              "color": "rgb(21, 100, 249)",
+              "fontSize": "15px",
+              "lineHeight": "27px",
+              "position": "relative",
+              "cursor": "pointer"
+          }}>따세권</div>:<div onClick={goBike} style={{
             "boxSizing": "border-box",
             "margin": "0px",
             "border": "0px",
@@ -135,13 +163,15 @@ function Navigation(){
             "fontFamily": "\"Spoqa Han Sans\", \"Nanum Gothic\", -apple-system, sans-serif",
             "display": "inline-block",
             "padding": "5px 0px",
-            "color": "rgb(21, 100, 249)",
+            "color": "rgb(34, 34, 34)",
             "fontSize": "15px",
             "lineHeight": "27px",
             "position": "relative",
             "cursor": "pointer"
-        }}>따세권</a>
-         <a href="https://portal.hanyang.ac.kr/sso/lgin.do" style={{
+        }}>따세권</div>
+        }
+        { type==="bike"? 
+        <div onClick={goStore} style={{
             "boxSizing": "border-box",
             "margin": "0px",
             "border": "0px",
@@ -158,7 +188,26 @@ function Navigation(){
             "position": "relative",
             "cursor": "pointer",
             "marginLeft": "35px"
-      }}>편세권</a>
+          }}>편세권</div> :
+        <div onClick={goStore} style={{
+        "boxSizing": "border-box",
+        "margin": "0px",
+        "border": "0px",
+        "font": "inherit",
+        "verticalAlign": "baseline",
+        "textDecoration": "none",
+        "outline": "none",
+        "fontFamily": "\"Spoqa Han Sans\", \"Nanum Gothic\", -apple-system, sans-serif",
+        "display": "inline-block",
+        "padding": "5px 0px",
+        "color": "rgb(21, 100, 249)",
+        "fontSize": "15px",
+        "lineHeight": "27px",
+        "position": "relative",
+        "cursor": "pointer",
+        "marginLeft": "35px"
+        }}>편세권</div>
+        }
         </nav>
 
       </div>

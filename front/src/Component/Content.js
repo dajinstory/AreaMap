@@ -2,7 +2,7 @@ import MapComponent from './MapComponent';
 import react, {useEffect, useState} from 'react'
 import ReactList from 'react-list';
 
-function Content({searchMapValue,selectedOption}){
+function Content({searchMapValue,selectedOption,type}){
 
   const [searchList,setSearchList] = useState([
     {name:"사근동 대여소", distance:30, roadAddress:"도로명주소", address:"지번주소",placeNumber:19198950},
@@ -56,6 +56,7 @@ function Content({searchMapValue,selectedOption}){
         searchMapValue={searchMapValue}
         selectedOption={selectedOption}
         setList={setList}
+        type={type}
         ></MapComponent>
     </div>
   )
