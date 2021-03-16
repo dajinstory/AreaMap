@@ -4,7 +4,7 @@ import React, {useState, useEffect } from "react";
 import { Polyline, withLeaflet } from "react-leaflet";
 import axios from 'axios';
 
-function MapComponent({searchMapValue,selectedOption, lat, lng,setList}) {
+function MapComponent({searchMapValue,selectedOption, lat, lng, setList}) {
   const [mapi,setMapi] = useState(0);
   const [markerArr, setmarkerArr] = useState([]);
   const [circleArr, setcircleArr] = useState([]);
@@ -18,11 +18,11 @@ function MapComponent({searchMapValue,selectedOption, lat, lng,setList}) {
                    { place_name: "논현역 7번 출구", x: "127.021477", y: "37.511517", road_address_name: "서울특별시 강남구 학동로 지하 102", dist : "200"},
                    { place_name: "신영 로열플레이스 앞", x: "127.035835", y: "37.512527", road_address_name: "서울특별시 강남구 언주로 626", dist : "200"},
                    { place_name: "MCM본사 직영점 앞", x: "127.0345508", y: "37.520641", road_address_name: "서울특별시 강남구 언주로 734", dist : "200"}]
-  var centerX = 37.624915253753194;
-  var centerY = 127.15122688059974;
+  var centerX = 37.566826;
+  var centerY = 126.9786567;
   var radius = selectedOption.value;
   var mapCenter;
-  var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable: true});
+  var infowindow = new kakao.maps.InfoWindow({zIndex:1});
   var ps;
   var firstDataId = 0;
   var searchCSList =[];
@@ -71,8 +71,6 @@ function MapComponent({searchMapValue,selectedOption, lat, lng,setList}) {
       }
       //await placeSearchForBike(mapData);
       setmarkerArr(tmpMarkerArr);
-      console.log(searchCSList);
-      setList(searchCSList);
       displayMarker(searchedCenter);
       makeCircle(coords.Ma, coords.La);
     }
@@ -91,12 +89,14 @@ function MapComponent({searchMapValue,selectedOption, lat, lng,setList}) {
       }
       firstDataId = data[0].id;
     }
+    setList(searchCSList);
   }
 
   async function placeSearchForBike (data){
     for(var i=0; i<data.length; i++){
       await displayMarker(data[i]);
     }
+    setList(searchCSList);
   }
 
 
@@ -119,10 +119,17 @@ function MapComponent({searchMapValue,selectedOption, lat, lng,setList}) {
             console.log(place.place_name);
             infowindow.open(mapi, marker);
         });
+        kakao.maps.event.addListener(marker, 'mouseover', function() {
+            infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+            console.log(place.place_name);  
+            infowindow.open(mapi, marker);
+        });
+        kakao.maps.event.addListener(marker, 'mouseout', function() {
+            infowindow.close();
+        });
         marker.setMap(mapi);
-        console.log(place.id);
         if(place.place_name != '우리집'){
-          searchCSList.push({name: place.place_name, distance : Math.floor(dist), roadAddress: place.road_address_name, url : place.id});
+          searchCSList.push({name: place.place_name, distance : Math.floor(dist), roadAddress: place.road_address_name, placeNumber : place.id});
         }
         tmpMarkerArr.push(marker);
       }
@@ -149,18 +156,17 @@ function MapComponent({searchMapValue,selectedOption, lat, lng,setList}) {
   
   function postPlace(x, y){
     const posting = {x: x, y: y, radius: radius};
-    axios.post('http://localhost:8080/',{
+    const res = axios.post('http://localhost:8080/',{
       x: x,
       y: y,
       radius : radius
     })
-    .then((response)=>{
-      for(var i=0;i<response.size;i++){
-        const postingData = { place_name: response[i].place_name, x: response[i].longitude, y: response[i].latitude, road_address_name: response[i].road_address_name, dist : "200"}
-        mapData.push(postingData);
-      }
-    })
+    .then()
     .catch((response) => { console.log('Error!')});
+    for(var i=0;i<res.size;i++){
+      const postingData = { place_name: res[i].place_name, x: res[i].longitude, y: res[i].latitude, road_address_name: res[i].road_address_name, dist : "200"}
+      mapData.push(postingData);
+    }
   }
 
 
