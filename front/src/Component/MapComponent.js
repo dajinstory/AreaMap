@@ -69,6 +69,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList}) {
       for(var i=1;i<=4;i++){
         await ps.categorySearch('CS2', placesSearchWithCategory, {location: coords,radius: radius, page:i}); 
       }
+      //setList(searchCSList);
       //await placeSearchForBike(mapData);
       setmarkerArr(tmpMarkerArr);
       displayMarker(searchedCenter);
