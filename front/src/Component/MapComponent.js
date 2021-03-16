@@ -110,10 +110,24 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList}) {
       });
       var dist = poly.getLength();
       if(dist <= radius){
+
+        if(place.place_name == '우리집'){
+          var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+          var imageSize = new kakao.maps.Size(24,35); 
+          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+          var marker = new kakao.maps.Marker({
+            map: mapi,
+            position: markerPosition,
+            image : markerImage
+          });
+        }
+        else{
           var marker = new kakao.maps.Marker({
             map: mapi,
             position: markerPosition
-        });
+          });
+        }
+          
         // 마커에 클릭이벤트를 등록합니다
         kakao.maps.event.addListener(marker, 'click', function() {
             // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
