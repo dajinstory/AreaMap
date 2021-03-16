@@ -10,7 +10,6 @@ plugins {
 
 group = "BNN.AreaMap"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_15
 
 configurations {
     compileOnly {
@@ -35,6 +34,12 @@ dependencies {
     runtimeOnly("mysql:mysql-connector-java")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("com.opencsv:opencsv:5.2")
+
+    // csv upload
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.opencsv:opencsv:5.2")
 }
 
 tasks.withType<KotlinCompile> {
