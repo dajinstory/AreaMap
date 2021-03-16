@@ -4,14 +4,22 @@ import Navigation from './Component/Navigation';
 import SearchBar from './Component/SearchBar'
 import Content from './Component/Content'
 import Footer from './Component/Footer';
-import {usePosition} from './Component/Position'
+import ModalWindow from './Component/ModalWindow'
+// import {usePosition} from './Component/Position'
 
 function App() {
 
   const [searchValue,setSearchValue] = useState('한양대학교')
   const [searchMapValue,setSearchMapValue] = useState('한양대학교')
   const [selectedOption,setSelectedOption] = useState(options[1])
-  const {latitude, longitude, error} = usePosition();
+
+  const [modalIsOpen,setIsOpen] = useState(false);
+  function openModal() {
+    console.log(modalIsOpen)
+    setIsOpen(!modalIsOpen);
+  }
+
+  // const {latitude, longitude, error} = usePosition();
 
    // 검색창 값 변화
    const searchValueOnChangeHandler = (e)=>{
@@ -48,7 +56,7 @@ function App() {
 
   // 리셋 버튼 클릭
   const resetOption = () =>{
-    console.log(latitude,longitude,error)
+    // console.log(latitude,longitude,error)
     setSearchValue('한양대학교')
     setSelectedOption(options[1])
   }
@@ -57,22 +65,25 @@ function App() {
     <>
     <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'></link>
       <div style={{font:"Spoqa Han Sans, Sans-serif"}}>
-        <Navigation></Navigation>
-        <SearchBar
-        searchValue={searchValue}
-        selectedOption={selectedOption}
-        searchValueOnChangeHandler={searchValueOnChangeHandler}
-        searchValueFocusHandler={searchValueFocusHandler}
-        searchValueEnterHandler={searchValueEnterHandler}
-        searchHandler={searchHandler}
-        handleChange={handleChange}
-        resetOption={resetOption}
-        ></SearchBar>
-        <Content
-        searchMapValue={searchMapValue}
-        selectedOption={selectedOption}
-        ></Content>
+        <div style={{width:"100vw",height:"100vh",minWidth:"1300px",overflow:"auto"}}>
+          <Navigation></Navigation>
+          <SearchBar
+          searchValue={searchValue}
+          selectedOption={selectedOption}
+          searchValueOnChangeHandler={searchValueOnChangeHandler}
+          searchValueFocusHandler={searchValueFocusHandler}
+          searchValueEnterHandler={searchValueEnterHandler}
+          searchHandler={searchHandler}
+          handleChange={handleChange}
+          resetOption={resetOption}
+          ></SearchBar>
+          <Content
+          searchMapValue={searchMapValue}
+          selectedOption={selectedOption}
+          ></Content>
+        </div>
         <Footer></Footer>
+        <ModalWindow adress="서울특별시 성동구 용답동 26-20" isOpen={modalIsOpen}></ModalWindow>
       </div>
     </>
   );
