@@ -90,7 +90,8 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList}) {
       }
       firstDataId = data[0].id;
     }
-    setList(searchCSList);
+    if(pagination.current == 4){setList(searchCSList);}
+    console.log(searchCSList);
   }
 
   async function placeSearchForBike (data){
