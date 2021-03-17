@@ -5,7 +5,7 @@ import com.opencsv.bean.CsvBindByName
 import javax.persistence.*
 
 @Entity
-data class Shop (
+data class Shop(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @CsvBindByName(column = "id")
     val id: Long? = null,
@@ -20,8 +20,8 @@ data class Shop (
     @CsvBindByName(column = "longitude")
     val longitude: Double,
 
-) {
-    fun toDTO() : ShopDTO {
+    ) {
+    fun toDTO(): ShopDTO {
         return ShopDTO(
             id = id,
             place_name = place_name,

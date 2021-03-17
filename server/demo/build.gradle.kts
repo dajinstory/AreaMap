@@ -1,15 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.2"
+    id("org.springframework.boot") version "2.4.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.spring") version "1.4.21"
-    kotlin("plugin.jpa") version "1.4.21"
+    kotlin("jvm") version "1.4.30"
+    kotlin("plugin.spring") version "1.4.30"
+    kotlin("plugin.jpa") version "1.4.30"
 }
 
 group = "BNN.AreaMap"
 version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_11
 
 configurations {
     compileOnly {
@@ -31,21 +32,17 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("mysql:mysql-connector-java")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    implementation("com.opencsv:opencsv:5.2")
-
-    // csv upload
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.opencsv:opencsv:5.2")
+	
+	// csv upload
+	implementation("com.opencsv:opencsv:5.2")
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "15"
+        jvmTarget = "11"
     }
 }
 

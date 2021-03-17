@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile
 class APIController {
     @Autowired
     private lateinit var shopService: ShopService
+
     @Autowired
     private lateinit var bikeService: BikeService
 
@@ -25,13 +26,13 @@ class APIController {
     @GetMapping("/bike", produces = ["application/json"])
     fun getBikes(@RequestBody areaDTO: AreaDTO?): ResponseEntity<Any> {
         // Get All
-        if(areaDTO==null){
+        if (areaDTO == null) {
             return ResponseEntity
                 .ok()
                 .body(bikeService.getBikes())
         }
         // Get Conditional
-        else{
+        else {
             return ResponseEntity
                 .ok()
                 .body(bikeService.getBikesByArea(areaDTO))
@@ -47,7 +48,7 @@ class APIController {
     }
 
     @PostMapping("/init-bikes", produces = ["application/json"])
-    fun initBikes(@RequestParam("csv") file: MultipartFile): ResponseEntity<List<Any>>{
+    fun initBikes(@RequestParam("csv") file: MultipartFile): ResponseEntity<List<Any>> {
         val importedEntries = bikeService.uploadCsvFile(file)
         return ResponseEntity.ok(importedEntries)
     }
@@ -59,13 +60,13 @@ class APIController {
     @GetMapping("/shop", produces = ["application/json"])
     fun getShops(@RequestBody areaDTO: AreaDTO?): ResponseEntity<Any> {
         // Get All
-        if(areaDTO==null){
+        if (areaDTO == null) {
             return ResponseEntity
                 .ok()
                 .body(shopService.getShops())
         }
         // Get Conditional
-        else{
+        else {
             return ResponseEntity
                 .ok()
                 .body(shopService.getShopsByArea(areaDTO))
@@ -81,7 +82,7 @@ class APIController {
     }
 
     @PostMapping("/init-shops", produces = ["application/json"])
-    fun initShops(@RequestParam("csv") file: MultipartFile): ResponseEntity<List<Any>>{
+    fun initShops(@RequestParam("csv") file: MultipartFile): ResponseEntity<List<Any>> {
         val importedEntries = shopService.uploadCsvFile(file)
         return ResponseEntity.ok(importedEntries)
     }

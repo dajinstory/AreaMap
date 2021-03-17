@@ -28,19 +28,26 @@ class ShopService {
         val shops = shopRepository.findAll()
         return shops.map { it.toDTO() }
     }
+
     fun getShopsByArea(areaDTO: AreaDTO): List<ShopDTO> {
         val area = areaDTO.toEntity()
         val latitude = area.latitude
         val longitude = area.longitude
         val dist_w = area.dist_w
         val dist_h = area.dist_h
-        val shops = shopRepository.findAllByLatitudeGreaterThanAndLatitudeLessThanAndLongitudeGreaterThanAndLongitudeLessThan(latitude-dist_h, latitude+dist_h, longitude-dist_w, longitude+dist_w)
+        val shops =
+            shopRepository.findAllByLatitudeGreaterThanAndLatitudeLessThanAndLongitudeGreaterThanAndLongitudeLessThan(
+                latitude - dist_h,
+                latitude + dist_h,
+                longitude - dist_w,
+                longitude + dist_w
+            )
         return shops.map { it.toDTO() }
     }
 
     // POST Shop
     @Transactional
-    fun createShop(shopDTO: ShopDTO) : ShopDTO {
+    fun createShop(shopDTO: ShopDTO): ShopDTO {
         val shop = shopRepository.save(shopDTO.toEntity())
         return shop.toDTO()
     }
@@ -48,6 +55,7 @@ class ShopService {
     // INIT Shop
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     class BadRequestException(msg: String) : RuntimeException(msg)
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     class CsvImportException(msg: String) : RuntimeException(msg)
 
@@ -55,11 +63,13 @@ class ShopService {
         if (file.isEmpty)
             throw BadRequestException("Empty file")
     }
+
     private fun createCSVToBean(fileReader: BufferedReader?): CsvToBean<Shop> =
         CsvToBeanBuilder<Shop>(fileReader)
             .withType(Shop::class.java)
             .withIgnoreLeadingWhiteSpace(true)
             .build()
+
     private fun closeFileReader(fileReader: BufferedReader?) {
         try {
             fileReader!!.close()
@@ -67,6 +77,7 @@ class ShopService {
             throw CsvImportException("Error during csv import")
         }
     }
+
     fun uploadCsvFile(file: MultipartFile): List<Shop> {
         throwIfFileEmpty(file)
         var fileReader: BufferedReader? = null

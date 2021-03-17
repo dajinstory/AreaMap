@@ -28,19 +28,26 @@ class BikeService {
         val bikes = bikeRepository.findAll()
         return bikes.map { it.toDTO() }
     }
+
     fun getBikesByArea(areaDTO: AreaDTO): List<BikeDTO> {
         val area = areaDTO.toEntity()
         val latitude = area.latitude.toDouble()
         val longitude = area.longitude.toDouble()
         val dist_w = area.dist_w.toDouble()
         val dist_h = area.dist_h.toDouble()
-        val bikes = bikeRepository.findBikesByLatitudeGreaterThanAndLatitudeLessThanAndLongitudeGreaterThanAndLongitudeLessThan(latitude-dist_h, latitude+dist_h, longitude-dist_w, longitude+dist_w)
+        val bikes =
+            bikeRepository.findBikesByLatitudeGreaterThanAndLatitudeLessThanAndLongitudeGreaterThanAndLongitudeLessThan(
+                latitude - dist_h,
+                latitude + dist_h,
+                longitude - dist_w,
+                longitude + dist_w
+            )
         return bikes.map { it.toDTO() }
     }
 
     // POST bike
     @Transactional
-    fun createBike(bikeDTO: BikeDTO) : BikeDTO {
+    fun createBike(bikeDTO: BikeDTO): BikeDTO {
         val bike = bikeRepository.save(bikeDTO.toEntity())
         return bike.toDTO()
     }
@@ -48,6 +55,7 @@ class BikeService {
     // INIT bike
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     class BadRequestException(msg: String) : RuntimeException(msg)
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     class CsvImportException(msg: String) : RuntimeException(msg)
 
@@ -55,11 +63,13 @@ class BikeService {
         if (file.isEmpty)
             throw BadRequestException("Empty file")
     }
+
     private fun createCSVToBean(fileReader: BufferedReader?): CsvToBean<Bike> =
         CsvToBeanBuilder<Bike>(fileReader)
             .withType(Bike::class.java)
             .withIgnoreLeadingWhiteSpace(true)
             .build()
+
     private fun closeFileReader(fileReader: BufferedReader?) {
         try {
             fileReader!!.close()
@@ -67,6 +77,7 @@ class BikeService {
             throw CsvImportException("Error during csv import")
         }
     }
+
     fun uploadCsvFile(file: MultipartFile): List<Bike> {
         throwIfFileEmpty(file)
         var fileReader: BufferedReader? = null
