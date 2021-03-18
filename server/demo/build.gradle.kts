@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.3"
+    id("org.springframework.boot") version "2.4.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.4.30"
-    kotlin("plugin.spring") version "1.4.30"
-    kotlin("plugin.jpa") version "1.4.30"
+    kotlin("jvm") version "1.4.31"
+    kotlin("plugin.spring") version "1.4.31"
+    kotlin("plugin.jpa") version "1.4.31"
 }
 
 group = "BNN.AreaMap"
@@ -34,9 +34,9 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-	
-	// csv upload
-	implementation("com.opencsv:opencsv:5.2")
+
+    // csv upload
+    implementation("com.opencsv:opencsv:5.2")
 }
 
 tasks.withType<KotlinCompile> {
