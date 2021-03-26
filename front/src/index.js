@@ -5,11 +5,14 @@ import Bike from './Bike';
 import Store from './Store';
 
 import reportWebVitals from './reportWebVitals';
-import { Route,BrowserRouter } from "react-router-dom";
+import { Route,BrowserRouter,Redirect } from "react-router-dom";
 
 
 ReactDOM.render((
   <BrowserRouter>
+    {/* <Route path="/">
+      <Redirect to='/bike'/>
+    </Route> */}
     <Route path="/bike" component={Bike}/>
     <Route path="/store" component={Store}/>
   </BrowserRouter>

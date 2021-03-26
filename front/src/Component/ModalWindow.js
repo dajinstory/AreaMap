@@ -2,22 +2,22 @@ import {useState,useEffect} from 'react'
 import Modal from 'react-modal';
 import bikelogo from '../image/logo2.png'
 
-function ModalWindow({adress,isOpen}){
+function ModalWindow({adress,type,modalIsOpen,closeModal,success}){
 
-  var subtitle;
-  const [modalIsOpen,setIsOpen] = useState(isOpen);
+  // var subtitle;
+  // const [modalIsOpen,setIsOpen] = useState(isOpen);
 
-  useEffect(() => {
-    setIsOpen(isOpen)
-  }, [isOpen])
+  // useEffect(() => {
+  //   setIsOpen(isOpen)
+  // }, [isOpen])
   
-  useEffect(() => {
-    console.log(bikelogo)
-  }, [])
+  // useEffect(() => {
+  //   console.log(bikelogo)
+  // }, [])
 
-  function closeModal(){
-    setIsOpen(false);
-  }
+  // function closeModal(){
+  //   setIsOpen(false);
+  // }
 
   const customStyles = {
     content : {
@@ -28,7 +28,8 @@ function ModalWindow({adress,isOpen}){
       marginRight           : '-50%',
       transform             : 'translate(-50%, -50%)',
       borderRadius: '20px',
-      boxShadow: "3px 3px 3px 3px gray"
+      boxShadow: "3px 3px 3px 3px gray",
+      zIndex:"9999"
     }
   };
   
@@ -44,7 +45,7 @@ function ModalWindow({adress,isOpen}){
           <div style={{width:"400px"}}>
               
               <div style={{display:"flex", "justifyContent": "space-between"}}>
-                  <div style={{marginLeft:"20px","textAlign":"left","font":"normal normal normal 50px/57px Nanum Brush Script"}}> 축하합니다!</div>
+                  <div style={{marginLeft:"20px","textAlign":"left","font":"normal normal normal 50px/57px Nanum Brush Script"}}> {success?"축하합니다!":"아쉽지만"}</div>
                   <div onClick={closeModal}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 40 40">
                       <path id="Icon_ionic-md-close" data-name="Icon ionic-md-close" d="M47.523,11.523l-4-4-16,16-16-16-4,4,16,16-16,16,4,4,16-16,16,16,4-4-16-16Z" transform="translate(-7.523 -7.523)" fill="#7e7e7e"/>
@@ -58,8 +59,8 @@ function ModalWindow({adress,isOpen}){
               <div style={{marginTop:"20px", display:"flex",justifyContent:"space-between"}}>
                 <img style={{marginLeft:"20px",marginTop:"15px", width:"150px",height:"40px"}} src={bikelogo}  alt="BigCo Inc. logo" />
                 <div>
-                  <span style={{textDecoration:"underline" ,"textAlign":"left","font":"bold normal normal 50px/57px Nanum Brush Script"}} > 따세권</span>
-                  <span style={{"textAlign":"left","font":"normal normal normal 50px/57px Nanum Brush Script"}} > 입니다.</span>
+                  <span style={{textDecoration:"underline" ,"textAlign":"left","font":"bold normal normal 50px/57px Nanum Brush Script"}} > {type==="bike"?"따세권":"편세권"}</span>
+                  <span style={{"textAlign":"left","font":"normal normal normal 50px/57px Nanum Brush Script"}} > {success?"입니다^^.":"이 아닙니다ㅠㅠ."}.</span>
                 </div>
               </div>
           </div>

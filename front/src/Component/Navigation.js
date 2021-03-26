@@ -1,5 +1,6 @@
 
 import { useHistory } from 'react-router-dom';
+
 function Navigation({type}){
 
   const history = useHistory();

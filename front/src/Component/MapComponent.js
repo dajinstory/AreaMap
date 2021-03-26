@@ -4,28 +4,42 @@ import React, {useState, useEffect } from "react";
 import { Polyline, withLeaflet } from "react-leaflet";
 import axios from 'axios';
 
-function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type}) {
+function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,openModal}) {
+  //map 객체
   const [mapi,setMapi] = useState(0);
+  //마커 저장하는 배열
   const [markerArr, setmarkerArr] = useState([]);
+  //원 저장하는 배열
   const [circleArr, setcircleArr] = useState([]);
+  //type
+  const [mapType, setmapType] = useState(type);
+
   useEffect(() => {
+      console.log(searchMapValue)
       setMapi(mapmake());
   }, []);
   useEffect(() => {
     mapscript();
   }, [searchMapValue, selectedOption]);
+
   const mapData = [{ place_name: "현대 고등학교 건너편", x: "127.066933", y: "37.623417", road_address_name: "서울특별시 강남구 압구정로 134", dist : "200"},
                    { place_name: "논현역 7번 출구", x: "127.021477", y: "37.511517", road_address_name: "서울특별시 강남구 학동로 지하 102", dist : "200"},
                    { place_name: "신영 로열플레이스 앞", x: "127.035835", y: "37.512527", road_address_name: "서울특별시 강남구 언주로 626", dist : "200"},
                    { place_name: "MCM본사 직영점 앞", x: "127.0345508", y: "37.520641", road_address_name: "서울특별시 강남구 언주로 734", dist : "200"}]
+  
+  //처음 default 중심 좌표 (서울 시청)
   var centerX = 37.566826;
   var centerY = 126.9786567;
+  //설정된 반경
   var radius = selectedOption.value;
   var mapCenter;
   var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+  //장소 검색 객체
   var ps;
   var firstDataId = 0;
+  //왼쪽에 표시될 마커 정보 배열
   var searchCSList =[];
+  //임시 마커 배열
   const tmpMarkerArr = [];
 
   //map객체 생성
@@ -48,15 +62,15 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type}) {
     //장소 검색용 객체 생성
     ps = new kakao.maps.services.Places(mapi);
      //주소를 입력했을 때 마커를 생성하고 해당 좌표로 이동
-    await deleteMarker();
+    deleteMarker();
     deleteCircle();
     var geocoder = new kakao.maps.services.Geocoder();
     await geocoder.addressSearch(searchMapValue, searchingHome);
   };
-
+  //지도에 그려지는 마커와 원 초기화
   const deleteMarker = () => markerArr.forEach(e => e.setMap(null));
   const deleteCircle = () => circleArr.forEach(e => e.setMap(null));
-
+  //입력된 주소를 지도의 center로 정하고 반경 내의 편의점, 따릉이를 검색
   async function searchingHome(result, status){
     if (status === kakao.maps.services.Status.OK){
       var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
@@ -65,52 +79,88 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type}) {
       centerY = coords.La;
       mapi.setCenter(coords);
       mapCenter = mapi.getCenter();
-      //해당 좌표를 중심으로 편의점 찾기
-      for(var i=1;i<=4;i++){
-        await ps.categorySearch('CS2', placesSearchWithCategory, {location: coords,radius: radius, page:i}); 
+      //따세권인 경우
+      if(mapType === 'bike'){
+        await placeSearchForBike(mapData);  
       }
-      //setList(searchCSList);
-      //await placeSearchForBike(mapData);
+      //편세권인 경우
+      else if(mapType === 'store'){
+        //해당 좌표를 중심으로 편의점 찾기 (page마다 15개의 data, 4개의 page)
+        for(var i=1;i<=4;i++){
+          await ps.categorySearch('CS2', placesSearchWithCategory, {location: coords,radius: radius, page:i}); 
+        }   
+      }
+      //반경내의 따릉이, 편의점을 나타낸 마커 배열 저장
       setmarkerArr(tmpMarkerArr);
+      //입력된 주소의 마커(집)를 지도에 표시
       displayMarker(searchedCenter);
+      //반경에 맞추어 지도에 원 표시
       makeCircle(coords.Ma, coords.La);
+
+      //모달 표시
     }
   }
 
   //편의점 찾는 함수 (카테고리 검색)
   async function placesSearchWithCategory (data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
+      //firstDataId : 각 page마다 처음 data 
+      //api가 더 이상 검색결과가 없으면 반복해서 data를 제공하기에 firstDataId를 통해 그 전 page와 data가 겹치는지 확인
       for (var i=0; i<data.length; i++) {
           if(data[i].id == firstDataId){
             break;
           }
           else{
-            await displayMarker(data[i]);    
+            displayMarker(data[i]);    
           }
       }
       firstDataId = data[0].id;
     }
-    if(pagination.current == 4){setList(searchCSList);}
-    console.log(searchCSList);
-  }
+    //마지막 page에 도달했을 경우 마커 배열에 그동안 찾아낸 위치들을 추가 + 길이별 정렬
+    if(pagination.current === 4){
+      searchCSList.sort(function (a, b){
+        return a.distance < b.distance ? -1 : a.distance > b.distance ? 1: 0;
+      });
 
-  async function placeSearchForBike (data){
-    for(var i=0; i<data.length; i++){
-      await displayMarker(data[i]);
+      setList(searchCSList);
+
+      //모달
+      if (searchCSList.length>0){
+        openModal(true);
+      }else{
+        openModal(false);
+      }
     }
+  }
+
+  //따릉이 찾는 함수
+  function placeSearchForBike (data){
+    for(var i=0; i<data.length; i++){
+      displayMarker(data[i]);
+    }
+    //마커 배열에 그동안 찾아낸 위치들을 추가
     setList(searchCSList);
+    
+    //모달
+     if (searchCSList.length>0){
+      openModal(true);
+    }else{
+      openModal(false);
+    }
   }
 
 
-  // 지도에 마커를 표시하는 함수입니다
+  // 지도에 마커를 표시하는 함수
   function displayMarker(place) {
       var markerPosition = new kakao.maps.LatLng(place.y, place.x);
+      //지도 중심과 마커간의 거리를 구합니다
       var poly = new kakao.maps.Polyline({
         path : [mapCenter, markerPosition]
       });
       var dist = poly.getLength();
+      //둘 사이의 거리가 설정한 반경보다 작을 때에만 추가해줌
       if(dist <= radius){
-
+        //마커가 검색된 좌표(집)인 경우는 마커를 따로 생성
         if(place.place_name == '우리집'){
           var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
           var imageSize = new kakao.maps.Size(24,35); 
@@ -121,37 +171,35 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type}) {
             image : markerImage
           });
         }
+        //
         else{
-          var marker = new kakao.maps.Marker({
+            marker = new kakao.maps.Marker({
             map: mapi,
             position: markerPosition
           });
         }
           
-        // 마커에 클릭이벤트를 등록합니다
-        kakao.maps.event.addListener(marker, 'click', function() {
-            // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-            infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-            console.log(place.place_name);
-            infowindow.open(mapi, marker);
-        });
+        //마커에 마우스를 갖다대면 infowindow 출력
         kakao.maps.event.addListener(marker, 'mouseover', function() {
             infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
             console.log(place.place_name);  
             infowindow.open(mapi, marker);
         });
+        //떼면 infowindow가 사라짐
         kakao.maps.event.addListener(marker, 'mouseout', function() {
             infowindow.close();
         });
         marker.setMap(mapi);
+        //검색된 좌표(집)가 아닌 경우에만 장소 배열에 추가해줍니다.
         if(place.place_name != '우리집'){
           searchCSList.push({name: place.place_name, distance : Math.floor(dist), roadAddress: place.road_address_name, placeNumber : place.id});
         }
+        //임시 마커 배열에 추가
         tmpMarkerArr.push(marker);
       }
   }
 
-
+  //반경에 따른 원을 그리는 함수
   function makeCircle(x, y) {
     var circle = new kakao.maps.Circle({
       center: new kakao.maps.LatLng(x, y),
@@ -169,7 +217,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type}) {
     setcircleArr(tmpCircleArr);
   }
 
-  
+  //서버와의 통신
   function postPlace(x, y){
     const posting = {x: x, y: y, radius: radius};
     const res = axios.post('http://localhost:8080/',{
@@ -184,8 +232,6 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type}) {
       mapData.push(postingData);
     }
   }
-
-
 
   return <div id="map" style={{ width: "100vw", height: "87vh" }}></div>;
 }
