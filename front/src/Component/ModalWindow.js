@@ -42,7 +42,7 @@ function ModalWindow({adress,type,modalIsOpen,closeModal,success}){
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <div style={{width:"400px"}}>
+          <div style={{width:"450px"}}>
               
               <div style={{display:"flex", "justifyContent": "space-between"}}>
                   <div style={{marginLeft:"20px","textAlign":"left","font":"normal normal normal 50px/57px Nanum Brush Script"}}> {success?"축하합니다!":"아쉽지만"}</div>

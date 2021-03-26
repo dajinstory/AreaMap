@@ -97,7 +97,7 @@ function Store() {
           ></SearchBar>
           <div style={{"boxSizing":"border-box","margin":"0px","padding":"0px","border":"0px","font":"inherit","verticalAlign":"baseline","WebkitBoxFlex":"1","flexGrow":"1","display":"flex","width":"100%","height":"calc(100% - 149px)","position":"relative"}}>
               <SearchResult searchedData={searchList}></SearchResult>
-              { !modal && 
+              { 
                 <MapComponent
                     searchMapValue={searchMapValue}
                     selectedOption={selectedOption}

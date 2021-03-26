@@ -233,7 +233,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
     }
   }
 
-  return <div id="map" style={{ width: "100vw", height: "87vh" }}></div>;
+  return <div id="map" style={{ width: "100vw", height: "87vh", zIndex:"-9999"}}></div>;
 }
 
 export default MapComponent;
