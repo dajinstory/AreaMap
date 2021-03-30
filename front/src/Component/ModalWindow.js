@@ -57,7 +57,7 @@ function ModalWindow({adress,type,modalIsOpen,closeModal,success}){
                 <div style={{font:"bold normal normal 20px Spoqa Han Sans, Sans-serif"}} >"{adress}"은</div>
               </div>
               <div style={{marginTop:"20px", display:"flex",justifyContent:"space-between"}}>
-                <img style={{marginLeft:"20px",marginTop:"15px", width:"150px",height:"40px"}} src={bikelogo}  alt="BigCo Inc. logo" />
+                { type==="bike" ?  <img style={{marginLeft:"20px",marginTop:"15px", width:"150px",height:"40px"}} src={bikelogo}  alt="BigCo Inc. logo" /> : <></>}
                 <div>
                   <span style={{textDecoration:"underline" ,"textAlign":"left","font":"bold normal normal 50px/57px Nanum Brush Script"}} > {type==="bike"?"따세권":"편세권"}</span>
                   <span style={{"textAlign":"left","font":"normal normal normal 50px/57px Nanum Brush Script"}} > {success?"입니다^^.":"이 아닙니다ㅠㅠ."}.</span>

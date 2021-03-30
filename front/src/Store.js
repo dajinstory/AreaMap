@@ -12,8 +12,8 @@ function Store() {
 
   const type = "store";
 
-  const [searchValue,setSearchValue] = useState('한양대학교')
-  const [searchMapValue,setSearchMapValue] = useState('한양대학교')
+  const [searchValue,setSearchValue] = useState('')
+  const [searchMapValue,setSearchMapValue] = useState('')
   const [selectedOption,setSelectedOption] = useState(options[1])
   const [searchList,setSearchList] = useState([])
 
@@ -25,7 +25,7 @@ function Store() {
 
   // 검색창 클릭시 값 지우기
   const searchValueFocusHandler = () =>{
-    setSearchValue("")
+    // setSearchValue("")
   }
 
   // 엔터 감지
@@ -84,7 +84,7 @@ function Store() {
     <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'></link>
       <div style={{font:"Spoqa Han Sans, Sans-serif"}}>
         <div style={{width:"100vw",height:"100vh",minWidth:"1300px",overflow:"auto"}}>
-          <Navigation type={"bike"}></Navigation>
+          <Navigation type={type}></Navigation>
           <SearchBar
           searchValue={searchValue}
           selectedOption={selectedOption}
