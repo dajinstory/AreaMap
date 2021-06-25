@@ -223,7 +223,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
     form.append('longitude', y);
     form.append('dist_w', 0.0001);
     form.append('dist_h', 0.0001);
-    await axios.get('http://3.37.97.136:47000/bike',{
+    await axios.get('http://15.164.66.192:47000/bike',{
       data:{
         latitude:x,
         longitude:y,
