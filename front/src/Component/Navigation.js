@@ -1,6 +1,12 @@
 
 import { useHistory } from 'react-router-dom';
+import { useEffect } from 'react'; 
+
 function Navigation({type}){
+
+  useEffect(() => {
+    console.log(type)
+  }, [])
 
   const history = useHistory();
 
