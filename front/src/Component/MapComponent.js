@@ -232,8 +232,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
       }
     })
     .then((response)=> {
-      var res = JSON.stringify(dummydata);
-      console.log(res);
+      var res = response.body
       for(var i=0;i<res.length;i++){
         const postingData = { place_name: res[i].place_name, x: res[i].longitude, y: res[i].latitude, road_address_name: res[i].road_address_name, dist : "200"}
         mapData.push(postingData);
