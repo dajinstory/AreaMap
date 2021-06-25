@@ -29,12 +29,14 @@ class APIController {
         if (areaDTO == null) {
             return ResponseEntity
                 .ok()
+                .header("Access-Control-Allow-Origin", "*")
                 .body(bikeService.getBikes())
         }
         // Get Conditional
         else {
             return ResponseEntity
                 .ok()
+                .header("Access-Control-Allow-Origin", "*")
                 .body(bikeService.getBikesByArea(areaDTO))
         }
     }
@@ -44,6 +46,7 @@ class APIController {
         bikeService.createBike(bikeDTO)
         return ResponseEntity
             .ok()
+            .header("Access-Control-Allow-Origin", "*")
             .body(true)
     }
 
