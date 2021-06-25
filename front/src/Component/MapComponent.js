@@ -22,10 +22,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
     mapscript();
   }, [searchMapValue, selectedOption]);
 
-  const mapData = [{ place_name: "현대 고등학교 건너편", x: "127.066933", y: "37.623417", road_address_name: "서울특별시 강남구 압구정로 134", dist : "200"},
-                   { place_name: "논현역 7번 출구", x: "127.021477", y: "37.511517", road_address_name: "서울특별시 강남구 학동로 지하 102", dist : "200"},
-                   { place_name: "신영 로열플레이스 앞", x: "127.035835", y: "37.512527", road_address_name: "서울특별시 강남구 언주로 626", dist : "200"},
-                   { place_name: "MCM본사 직영점 앞", x: "127.0345508", y: "37.520641", road_address_name: "서울특별시 강남구 언주로 734", dist : "200"}]
+  var mapData = [];
   
   //처음 default 중심 좌표 (서울 시청)
   var centerX = 37.566826;
@@ -81,6 +78,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
       mapCenter = mapi.getCenter();
       //따세권인 경우
       if(mapType === 'bike'){
+        await postPlace(centerY, centerX);
         await placeSearchForBike(mapData);  
       }
       //편세권인 경우
@@ -121,9 +119,7 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
       searchCSList.sort(function (a, b){
         return a.distance < b.distance ? -1 : a.distance > b.distance ? 1: 0;
       });
-
       setList(searchCSList);
-
       //모달
       if (searchCSList.length>0){
         openModal(true);
@@ -140,7 +136,6 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
     }
     //마커 배열에 그동안 찾아낸 위치들을 추가
     setList(searchCSList);
-    
     //모달
      if (searchCSList.length>0){
       openModal(true);
@@ -158,6 +153,9 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
         path : [mapCenter, markerPosition]
       });
       var dist = poly.getLength();
+      console.log(mapCenter);
+      console.log(place.y, place.x);
+      console.log(dist);
       //둘 사이의 거리가 설정한 반경보다 작을 때에만 추가해줌
       if(dist <= radius){
         //마커가 검색된 좌표(집)인 경우는 마커를 따로 생성
@@ -218,22 +216,34 @@ function MapComponent({searchMapValue,selectedOption, lat, lng, setList,type,ope
   }
 
   //서버와의 통신
-  function postPlace(x, y){
+  async function postPlace(x, y){
     const posting = {x: x, y: y, radius: radius};
-    const res = axios.post('http://localhost:8080/',{
-      x: x,
-      y: y,
-      radius : radius
+    let form = new FormData();
+    form.append('latitude', x);
+    form.append('longitude', y);
+    form.append('dist_w', 0.0001);
+    form.append('dist_h', 0.0001);
+    await axios.get('http://3.37.97.136:47000/bike',{
+      data:{
+        latitude:x,
+        longitude:y,
+        dist_w:0.01,
+        dist_h:0.01
+      }
     })
-    .then()
+    .then((response)=> {
+      var res = JSON.stringify(dummydata);
+      console.log(res);
+      for(var i=0;i<res.length;i++){
+        const postingData = { place_name: res[i].place_name, x: res[i].longitude, y: res[i].latitude, road_address_name: res[i].road_address_name, dist : "200"}
+        mapData.push(postingData);
+      }
+    })
     .catch((response) => { console.log('Error!')});
-    for(var i=0;i<res.size;i++){
-      const postingData = { place_name: res[i].place_name, x: res[i].longitude, y: res[i].latitude, road_address_name: res[i].road_address_name, dist : "200"}
-      mapData.push(postingData);
-    }
+    
   }
 
-  return <div id="map" style={{ width: "100vw", height: "87vh", zIndex:"-9999"}}></div>;
+  return <div id="map" style={{ width: "100vw", height: "87vh", zIndex:"0"}}></div>;
 }
 
 export default MapComponent;
